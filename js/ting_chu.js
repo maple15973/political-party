@@ -85,6 +85,7 @@ TingChuGame = function(game) {};
 
     preload: function() {
       game.load.image("TingChuRose", "media/ting_chu/rose.png");
+      game.load.image("TingChuRoseDie", "media/ting_chu/rose_die.png");
       game.load.image("TingChuBg", "media/ting_chu/bg.png");
 
       isStageStarted = false;
@@ -102,7 +103,7 @@ TingChuGame = function(game) {};
       var roseHeight = 306;
       var scaleFactor = 1;
       var roseX = gameWidth / 2;
-      var roseY = gameHeight - roseHeight/2;
+      var roseY = gameHeight;
       imageRose = game.add.image(roseX, roseY, "TingChuRose");
       imageRose.anchor.set(0.5, 1);
       imageRose.scale.set(scaleFactor);
@@ -130,7 +131,6 @@ TingChuGame = function(game) {};
     var time = 0 ;
     var time_interval = 500;
     var graphics;
-    var stop = false;
     var initialKeyboardWidth = 70;
     var initialKeyboardHeight = initialKeyboardWidth;
     var initialKeyboardX = gameWidth/2;
@@ -168,9 +168,32 @@ TingChuGame = function(game) {};
         graphics.clear();
         keyText.text = "";
       }
-      if(keyText.y > gameHeight){
-        alert("You score: "+ (counter + 1));
-        game.state.start("MainMenu");
+      if(keyText.y > gameHeight - 306){
+        if(!stop){
+          stop = true;
+          imageRose.destroy();
+          var roseWidth = 303;
+          var roseHeight = 178;
+          var scaleFactor = 1;
+          var roseX = gameWidth / 2;
+          var roseY = gameHeight;
+          imageRose = game.add.image(roseX, roseY, "TingChuRoseDie");
+          imageRose.anchor.set(0.5, 1);
+          imageRose.scale.set(scaleFactor);
+          game.add.text(
+            gameWidth/2 ,
+            gameHeight/4,
+            "柱柱姊挺了"+counter+"下，已經挺不柱了",
+            {
+              font: "40px Arial",
+              fill: "#000000",
+            }
+          );
+        }
+        game.time.events.add(5000,function(){
+          game.state.start("MainMenu");
+        })
+
       }
     }, time);
   }
